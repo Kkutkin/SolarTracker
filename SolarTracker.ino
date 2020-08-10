@@ -6,7 +6,15 @@ int ldrleftop     = A0;
 int ldrrightop    = A1;
 int ldrleftdown   = A2;
 int ldrrightdown  = A3;
-int sleep         = 1000;
+int sleep         = 100;
+int MinAngle      = 1;
+int MaxAngle      = 179;
+int AzAngle       = 1;
+int GradAngle     = 1;
+int ldazimuth     = 0;
+int ldgradient     = 0;
+int Tolerance     = 10;
+
 Servo azimuth; 
 Servo gradient;  
  
@@ -22,17 +30,29 @@ void setup()
  
 void loop()
 {
-  // Redaing value from analog Pin
-  int valueldrleftop  = analogRead(ldrleftop);
-  int valueldrrightop = analogRead(ldrrightop);
-//  int valueldrleftdown  = analogRead(ldrleftdown);
-//  int valueldrrightdown = analogRead(ldrrightdown);
+ldazimuth = (analogRead(ldrleftop) - analogRead(ldrrightop));
+ldgradient = (analogRead(ldrleftdown) - analogRead(ldrrightdown));
+Serial.print(F("Value read ldazimuth:"));
+Serial.println(ldazimuth);
+//Serial.print(F("Value read ldgradient:"));
+//Serial.println(ldgradient);
 
-Serial.print(F("Value read ldrleftop:"));
-Serial.println(valueldrleftop);
-Serial.print(F("Value read ldrrightop:"));
-Serial.println(valueldrrightop);
 delay(sleep);
+//driving azimuth motor
+if (( ldazimuth < 0) && (ldazimuth < -Tolerance)) {
+  //then < 0 go to the left
+  if (AzAngle > 1) {
+    AzAngle =  AzAngle -1;
+  }
+  azimuth.write(AzAngle);
+}
+else if ((ldazimuth > 0) &&  (ldazimuth > Tolerance)) {
+  // then > 0 go to the right
+   if (AzAngle < 179) {
+    AzAngle =  AzAngle +1;
+  }
+  azimuth.write(AzAngle);
+}
 //control the servo's direction and the position of the motor
 
 //   azimuth.write(1);      // Turn SG90 servo Left to 1 degrees
