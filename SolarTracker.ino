@@ -38,40 +38,38 @@ Serial.println(ldazimuth);
 //Serial.println(ldgradient);
 
 delay(sleep);
+
 //driving azimuth motor
 if (( ldazimuth < 0) && (ldazimuth < -Tolerance)) {
   //then < 0 go to the left
-  if (AzAngle > 1) {
+  if (AzAngle > MinAngle) {
+    
     AzAngle =  AzAngle -1;
   }
   azimuth.write(AzAngle);
 }
 else if ((ldazimuth > 0) &&  (ldazimuth > Tolerance)) {
   // then > 0 go to the right
-   if (AzAngle < 179) {
+   if (AzAngle < MaxAngle) {
     AzAngle =  AzAngle +1;
   }
   azimuth.write(AzAngle);
 }
-//control the servo's direction and the position of the motor
+// driving gradient motor
 
-//   azimuth.write(1);      // Turn SG90 servo Left to 1 degrees
-//    gradient.write(1);      // Turn SG90 servo Left to 1 degrees
-//   delay(10000); 
-//   azimuth.write(45);      // Turn SG90 servo Left to 45 degrees
-//   gradient.write(45);      // Turn SG90 servo Left to 45 degrees
-//   delay(10000);          // Wait 10 seconds
-//   azimuth.write(90);      // Turn SG90 servo back to 90 degrees (center position)
-//   gradient.write(90);      // Turn SG90 servo back to 90 degrees (center position)
-//   delay(10000);          // Wait 10 seconds
-//   azimuth.write(135);     // Turn SG90 servo Right to 135 degrees
-//   gradient.write(135);     // Turn SG90 servo Right to 135 degrees
-//   delay(10000);          // Wait 10 seconds
-//   azimuth.write(179);      // Turn SG90 servo back to 179 degrees (center position)
-//   gradient.write(179);      // Turn SG90 servo back to 179 degrees (center position)
-//   delay(10000);
- 
-
- 
- 
+if (( ldgradient < 0) && (ldgradient < -Tolerance)) {
+  //then < 0 go to the left
+  if (GradAngle > MinAngle) {
+    
+    GradAngle =  GradAngle -1;
+  }
+  gradient.write(GradAngle);
+}
+else if ((ldgradient > 0) &&  (ldgradient > Tolerance)) {
+  // then > 0 go to the right
+   if (GradAngle < MaxAngle) {
+    GradAngle =  GradAngle +1;
+  }
+  gradient.write(GradAngle);
+}
 }
