@@ -6,13 +6,14 @@ int ldrleftop     = A0;
 int ldrrightop    = A1;
 int ldrleftdown   = A2;
 int ldrrightdown  = A3;
-int sleep         = 100;
+int sleep         = 200;
 int MinAngle      = 1;
 int MaxAngle      = 179;
 int AzAngle       = 1;
 int GradAngle     = 1;
 int ldazimuth     = 0;
-int ldgradient     = 0;
+int ldgradient    = 0;
+int diffazgd      = 0;
 int Tolerance     = 10;
 
 Servo azimuth; 
@@ -25,6 +26,8 @@ void setup()
   Serial.begin(9600);  
   azimuth.attach(servoPinA);
   gradient.attach(servoPinG);
+  azimuth.write(AzAngle);
+  gradient.write(GradAngle);
 }
  
  
@@ -32,11 +35,17 @@ void loop()
 {
 ldazimuth = (analogRead(ldrleftop) - analogRead(ldrrightop));
 ldgradient = (analogRead(ldrleftdown) - analogRead(ldrrightdown));
+diffazgd = ldazimuth - ldgradient;
+//Serial.print(F("Value read ldrleftdown:"));
+//Serial.println(analogRead(ldrleftdown));
+//Serial.print(F("Value read ldrrightdown:"));
+//Serial.println(analogRead(ldrrightdown));
 Serial.print(F("Value read ldazimuth:"));
-Serial.println(ldazimuth);
-//Serial.print(F("Value read ldgradient:"));
-//Serial.println(ldgradient);
-
+Serial.print(ldazimuth);
+Serial.print(F(" Value read ldgradient:"));
+Serial.print(ldgradient);
+Serial.print(F(" Value read diffazgd:"));
+Serial.println(diffazgd);
 delay(sleep);
 
 //driving azimuth motor
@@ -57,19 +66,19 @@ else if ((ldazimuth > 0) &&  (ldazimuth > Tolerance)) {
 }
 // driving gradient motor
 
-if (( ldgradient < 0) && (ldgradient < -Tolerance)) {
-  //then < 0 go to the left
+if (( diffazgd < 0) && (diffazgd < -Tolerance)) {
+//  //then < 0 go to the left
   if (GradAngle > MinAngle) {
     
     GradAngle =  GradAngle -1;
   }
   gradient.write(GradAngle);
 }
-else if ((ldgradient > 0) &&  (ldgradient > Tolerance)) {
+else if ((diffazgd > 0) &&  (diffazgd > Tolerance)) {
   // then > 0 go to the right
    if (GradAngle < MaxAngle) {
     GradAngle =  GradAngle +1;
   }
-  gradient.write(GradAngle);
+ gradient.write(GradAngle);
 }
 }
